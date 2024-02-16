@@ -1,30 +1,19 @@
 import { ethers } from 'ethers';
-import { Web3ConfigService } from '../../common/config/web3-config.service';
 import { Injectable } from '@nestjs/common';
-import path from 'path';
-import fs from 'fs';
 
 @Injectable()
 export class EthersService {
-  constructor(
-    private web3ConfigService: Web3ConfigService,
-  ) {
+  constructor() {}
+  get ethers() {
+    return ethers;
   }
-
-  async getContractEvents(eventName: string) {
-    const url = this.web3ConfigService.network.rpcUrl;
-    const contractAddress = this.web3ConfigService.network.contractAddress;
-
-    const provider:ethers.providers.Provider = new ethers.providers.StaticJsonRpcProvider(url);
-
-    const ROOT_DIR = path.resolve(__dirname, '..', '..');
-    const abiPath = path.resolve(
-      ROOT_DIR, 'src',
-      this.web3ConfigService.network.contractAbi,
-    );
-    const abi = JSON.parse(fs.readFileSync(abiPath, 'utf8'));
-
-    const contract = new ethers.Contract(contractAddress, abi.abi, provider);
-    return await contract.queryFilter(contract.filters.TestEvent(null));
+  getProvider(rpcUrl: string): ethers.providers.Provider {
+    return new ethers.providers.StaticJsonRpcProvider(rpcUrl);
+  }
+  getContract(abi: any, contractAddress: string, provider: ethers.providers.Provider): ethers.Contract {
+    return new ethers.Contract(contractAddress, abi.abi, provider);
+  }
+  getContractEvents(contract: ethers.Contract, eventName: string): Promise<any> {
+    return contract.queryFilter(contract.filters[eventName]());
   }
 }

@@ -7,6 +7,7 @@ import { ListenersModule } from './listeners/listeners.module';
 import { CommonConfigModule } from './common/config/common-config.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { PublishersModule } from './publishers/publishers.module';
+import { IntegrationsModule } from './integrations/integrations.module';
 
 @Module({
   imports: [
@@ -18,9 +19,9 @@ import { PublishersModule } from './publishers/publishers.module';
     CommonConfigModule,
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
+    IntegrationsModule,
     ListenersModule,
-    PublishersModule,
-
+    PublishersModule
   ],
   controllers: [],
   providers: [AppService],

@@ -8,6 +8,9 @@ export class EnvironmentConfigService {
     get port(): string {
         return this.configService.get<string>('PORT', '3000');
     }
+    get botPrivateKey(): string {
+        return this.configService.get<string>('BOT_PRIVATE_KEY', '');
+    }
     get rpcUrl(): string {
         return this.configService.get<string>('RPC_URL', 'http://localhost:8545');
     }
@@ -20,16 +23,18 @@ export class EnvironmentConfigService {
     get contractAbi(): any {
         return this.configService.get<any>('CONTRACT_ABI_ROOT', '');
     }
-    get contractLastCheckedBlock(): string {
-        return this.configService.get<string>('CONTRACT_LAST_CHECKED_BLOCK', '');
+    get safeAddress(): string {
+        return this.configService.get<string>('SAFE_ADDRESS', '');
     }
+
 }
 
 export const envValidator = Joi.object({
     PORT: Joi.string().default(3000),
+    BOT_PRIVATE_KEY: Joi.string().default(''),
     RPC_URL: Joi.string().default('http://localhost:8545'),
     CHAIN_ID: Joi.string().default(1),
     CONTRACT_ADDRESS: Joi.string().default(''),
     CONTRACT_ABI_ROOT: Joi.any().default(''),
-    CONTRACT_LAST_CHECKED_BLOCK: Joi.string().default(''),
+    SAFE_ADDRESS: Joi.string().default(''),
 });

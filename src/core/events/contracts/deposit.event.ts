@@ -1,5 +1,6 @@
-import { AbstractEvent } from '../event.factory';
-export class TransactionEvent extends AbstractEvent {
+import { AbstractEvent } from '../abstract.event';
+
+export class DepositEvent extends AbstractEvent {
   constructor(
     public name: string,
     public data: any,
