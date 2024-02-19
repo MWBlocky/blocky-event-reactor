@@ -7,9 +7,8 @@ import { Events } from './common/enums/events';
 export class AppService implements OnModuleInit {
   constructor(private contractEventsService: ContractEventsService) {
   }
-
   onModuleInit() {
     this.contractEventsService
-      .registerCronJob(Events.CONTRACT_DEPOSIT_EVENT, SchedulerType.ONE_MINUTE);
+      .registerCronJob(Events.CONTRACT_DEPOSIT_EVENT, SchedulerType.HALF_MINUTE);
   }
 }

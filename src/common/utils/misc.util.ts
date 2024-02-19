@@ -1,9 +1,6 @@
-export const numberToHexString = (data: number) => {
-  const dataString = data.toString();
-  const dataHexString = '0x' + Buffer.from(dataString, 'utf8').toString('hex');
-  return dataHexString;
+export const toHexString = (data: string) => {
+  return '0x' + Buffer.from(data, 'utf8').toString('hex');
 }
-
 export const EIP712_SAFE_TX_TYPE = {
   SafeTx: [
     { type: "address", name: "to" },

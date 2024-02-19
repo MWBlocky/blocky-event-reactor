@@ -4,6 +4,8 @@ import fs from 'fs';
 import { Web3ConfigService } from '../common/config/web3-config.service';
 import { EthersService } from './ethers-rpc/ethers.service';
 import { SafeSdkService } from './safe-sdk/safe-sdk.service';
+import { DepositEvent } from '../core/contracts-processor.interface';
+import { TransactionData } from './integrations.interface';
 
 @Injectable()
 export class IntegrationsService {
@@ -25,10 +27,18 @@ export class IntegrationsService {
 
     const contract = this.ethersService.getContract(abi, contractAddress, provider);
 
-    return await this.ethersService.getContractEvents(contract, eventName);
+    const events = await this.ethersService.getContractEvents(contract, eventName);
+    const mappedEvents: DepositEvent[] = events.map((event: any) => {
+      return {
+        blockNumber: event.blockNumber,
+        transactionIndex: event.transactionIndex,
+        args: event.args
+      }
+    });
+    return mappedEvents;
   }
 
-  async createTransaction(data: any) {
+  async createTransaction(data: TransactionData) {
     const { botPrivateKey, rpcUrl, safeAddress, chainId } = this.web3ConfigService.network;
     const ethers = this.ethersService.ethers;
     const provider = this.ethersService.getProvider(rpcUrl);
@@ -36,9 +46,9 @@ export class IntegrationsService {
     const owner1Signer = new ethers.Wallet(botPrivateKey, provider);
     const senderAddress = await owner1Signer.getAddress();
 
-    const protocolKitOwner1 = await this.safeSdkService.createProtocolKit(ethers, owner1Signer, safeAddress);
+    const protocolKitOwner1 = await this.safeSdkService.createProtocolKit(ethers, owner1Signer);
     const safeContractNonce = await this.ethersService.getSafeContractNonce(safeAddress, owner1Signer);
-    console.log('safeContractNonce', safeContractNonce);
+
     const newTx = await this.safeSdkService.createTransaction(protocolKitOwner1,{
         nonce: safeContractNonce,
         ...data

@@ -1,12 +1,15 @@
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { Injectable, Logger } from '@nestjs/common';
-import { SchedulerType } from '../common/enums/scheduler';
+import { CronJobStatus, SchedulerType } from '../common/enums/scheduler';
 import { SchedulerUtil } from '../common/utils/scheduler.util';
 import { ContractsProcessorService } from '../core/contracts-processor.service';
 
 @Injectable()
 export class ContractEventsService {
   private logger = new Logger('ContractEventsService');
+  private cronJobStatus = {
+    status: CronJobStatus.IDLE,
+  };
 
   constructor(
     private schedulerUtils: SchedulerUtil,
@@ -26,10 +29,18 @@ export class ContractEventsService {
   }
 
   async handleCron(eventName: string) {
+    if (this.cronJobStatus.status === CronJobStatus.RUNNING) {
+      this.logger.debug('Contract events scheduler is already running');
+      return;
+    }
     this.logger.debug('Contract events scheduler called');
-    this.processorService.processSignedTransactionPropositionCreation()
-      .then((tx: string) => {
-        this.logger.log('Created: ' + tx.length || 0 + ' transactions');
-      });
+    try {
+      this.cronJobStatus.status = CronJobStatus.RUNNING;
+      await this.processorService.processSignedTransactionPropositionCreation();
+    } catch (error) {
+      this.logger.error(`Error: ${error.message}`);
+    } finally {
+      this.cronJobStatus.status = CronJobStatus.IDLE;
+    }
   }
 }

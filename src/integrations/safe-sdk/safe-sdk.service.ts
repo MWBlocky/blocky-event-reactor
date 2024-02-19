@@ -1,40 +1,43 @@
 import SafeApiKit from '@safe-global/api-kit';
-import { DeploySafeProps, EthersAdapter, SafeAccountConfig } from '@safe-global/protocol-kit';
-import { SafeFactory } from '@safe-global/protocol-kit'
-import { MetaTransactionData } from '@safe-global/safe-core-sdk-types';
-import { numberToHexString } from '../../common/utils/misc.util';
-import { SafeTransactionData } from '@safe-global/safe-core-sdk-types/dist/src/types';
+import Safe, { DeploySafeProps, EthersAdapter, SafeAccountConfig } from '@safe-global/protocol-kit';
+import { SafeFactory } from '@safe-global/protocol-kit';
+import { toHexString } from '../../common/utils/misc.util';
+import { Wallet } from 'ethers';
+import { TransactionData } from '../integrations.interface';
 
 export class SafeSdkService {
-  constructor() {}
-
-  async createSafeApiKit(chainId: bigint) {
-    return new SafeApiKit({chainId});
+  constructor() {
   }
 
-  async createProtocolKit(ethers: any, owner1Signer: any, safeAddress: string) {
+  async createSafeApiKit(chainId: bigint) {
+    return new SafeApiKit({ chainId });
+  }
+
+  async createProtocolKit(
+    ethers: typeof import("ethers/lib.commonjs/ethers"),
+    owner1Signer: Wallet): Promise<Safe> {
     const ethAdapterOwner1 = new EthersAdapter({
       ethers,
-      signerOrProvider: owner1Signer
-    })
-    const safeFactory = await SafeFactory.create({ ethAdapter: ethAdapterOwner1 })
+      signerOrProvider: owner1Signer,
+    });
+    const safeFactory = await SafeFactory.create({ ethAdapter: ethAdapterOwner1 });
     const owner1WalletAddress = await owner1Signer.getAddress();
     const safeAccountConfig: SafeAccountConfig = {
       owners: [owner1WalletAddress],
-      threshold: 1,
-    }
+      threshold: 2,
+    };
     const saltNonce = Math.floor(Date.now() / 1000);
-    const deploySafeProps:DeploySafeProps = {
+    const deploySafeProps: DeploySafeProps = {
       safeAccountConfig: safeAccountConfig,
-      saltNonce: saltNonce.toString()
-    }
+      saltNonce: saltNonce.toString(),
+    };
     return await safeFactory.deploySafe(deploySafeProps);
   }
 
-  async createTransaction(protocolKitOwner1: any, transactionData: any){
+  async createTransaction(protocolKitOwner1: Safe, transactionData: TransactionData){
     const stringValue = transactionData.value.toString();
-    const hexData = numberToHexString(transactionData.data);
-    const safeTransactionData: any = {
+    const hexData = toHexString(transactionData.data);
+    const safeTransactionData = {
       to: transactionData.to,
       value: stringValue,
       data: hexData,

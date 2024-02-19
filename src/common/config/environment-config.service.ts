@@ -26,7 +26,9 @@ export class EnvironmentConfigService {
     get safeAddress(): string {
         return this.configService.get<string>('SAFE_ADDRESS', '');
     }
-
+    get storageJsonFile(): string {
+        return this.configService.get<string>('STORAGE_JSON_FILE_ROOT', '');
+    }
 }
 
 export const envValidator = Joi.object({
@@ -37,4 +39,5 @@ export const envValidator = Joi.object({
     CONTRACT_ADDRESS: Joi.string().default(''),
     CONTRACT_ABI_ROOT: Joi.any().default(''),
     SAFE_ADDRESS: Joi.string().default(''),
+    STORAGE_JSON_FILE_ROOT: Joi.string().default(''),
 });

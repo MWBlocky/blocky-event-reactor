@@ -13,4 +13,5 @@ import { SafeSdkService } from './safe-sdk/safe-sdk.service';
   ],
   exports: [IntegrationsService],
 })
-export class IntegrationsModule {}
+export class IntegrationsModule {
+}

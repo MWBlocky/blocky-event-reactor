@@ -5,8 +5,8 @@ import { EnvironmentConfigService } from './environment-config.service';
 export class Web3ConfigService {
   constructor(
     private environmentConfigService: EnvironmentConfigService
-  ) {}
-
+  ) {
+  }
   get network(): Network {
     const botPrivateKey = this.environmentConfigService.botPrivateKey;
     const rpcUrl = this.environmentConfigService.rpcUrl;
