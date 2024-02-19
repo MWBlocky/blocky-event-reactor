@@ -24,30 +24,38 @@ export class IntegrationsService {
     const abi = JSON.parse(fs.readFileSync(abiPath, {encoding:'utf8'}));
 
     const contract = this.ethersService.getContract(abi, contractAddress, provider);
-    const events = await this.ethersService.getContractEvents(contract, eventName);
 
-    return events;
+    return await this.ethersService.getContractEvents(contract, eventName);
   }
 
-  async getPendingTransactions() {
-    const chainId = this.web3ConfigService.network.chainId;
-    const safeAddress = this.web3ConfigService.network.safeAddress;
-    return await this.safeSdkService.getPendingTransactions(chainId, safeAddress);
-  }
-
-  async confirmTransaction(safeTxHash: any) {
-    const chainId = this.web3ConfigService.network.chainId;
-    const safeApiKit = this.safeSdkService.createSafeApiKit(chainId);
+  async createTransaction(data: any) {
+    const { botPrivateKey, rpcUrl, safeAddress, chainId } = this.web3ConfigService.network;
     const ethers = this.ethersService.ethers;
-    const safeAddress = this.web3ConfigService.network.safeAddress;
-    const url = this.web3ConfigService.network.rpcUrl;
-    const botPrivateKey = this.web3ConfigService.network.botPrivateKey;
-    const botWallet = new ethers.Wallet(botPrivateKey, this.ethersService.getProvider(url));
-    const ethAdapterBot = this.safeSdkService.createEthAdapter(ethers, botWallet.getAddress());
-    const protocolKitBot = await this.safeSdkService.createSafe(ethAdapterBot, safeAddress);
-    const signature = await protocolKitBot.signHash(safeTxHash)
-    const confirmedTx = this.safeSdkService.confirmTransaction(safeApiKit, safeTxHash, signature.data);
+    const provider = this.ethersService.getProvider(rpcUrl);
 
-    return confirmedTx;
+    const owner1Signer = new ethers.Wallet(botPrivateKey, provider);
+    const senderAddress = await owner1Signer.getAddress();
+
+    const protocolKitOwner1 = await this.safeSdkService.createProtocolKit(ethers, owner1Signer, safeAddress);
+    const safeContractNonce = await this.ethersService.getSafeContractNonce(safeAddress, owner1Signer);
+    console.log('safeContractNonce', safeContractNonce);
+    const newTx = await this.safeSdkService.createTransaction(protocolKitOwner1,{
+        nonce: safeContractNonce,
+        ...data
+      });
+
+    const safeTxHash = this.ethersService.hashSafeTx(chainId, safeAddress, newTx);
+    const senderSignature = await protocolKitOwner1.signHash(safeTxHash);
+
+    const safeApiKit = await this.safeSdkService.createSafeApiKit(chainId);
+    await safeApiKit.proposeTransaction({
+      safeAddress,
+      safeTransactionData: newTx.data,
+      safeTxHash,
+      senderAddress,
+      senderSignature: senderSignature.data,
+    })
+
+    return await safeApiKit.getTransaction(safeTxHash)
   }
 }

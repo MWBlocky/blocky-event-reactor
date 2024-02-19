@@ -3,11 +3,10 @@ import { AppService } from './app.service';
 import { envValidator } from './common/config/environment-config.service';
 import {ConfigModule} from "@nestjs/config";
 import { ScheduleModule } from '@nestjs/schedule';
-import { ListenersModule } from './listeners/listeners.module';
 import { CommonConfigModule } from './common/config/common-config.module';
-import { EventEmitterModule } from '@nestjs/event-emitter';
-import { PublishersModule } from './publishers/publishers.module';
+import { ContractEventsModule } from './schedulers/contract-events.module';
 import { IntegrationsModule } from './integrations/integrations.module';
+import { ContractsProcessorModule } from './core/contracts-processor.module';
 
 @Module({
   imports: [
@@ -18,10 +17,9 @@ import { IntegrationsModule } from './integrations/integrations.module';
     }),
     CommonConfigModule,
     ScheduleModule.forRoot(),
-    EventEmitterModule.forRoot(),
     IntegrationsModule,
-    ListenersModule,
-    PublishersModule
+    ContractsProcessorModule,
+    ContractEventsModule,
   ],
   controllers: [],
   providers: [AppService],

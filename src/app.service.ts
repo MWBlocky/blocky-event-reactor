@@ -1,15 +1,15 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { PublishersService } from './publishers/publishers.service';
+import { ContractEventsService } from './schedulers/contract-events.service';
 import { SchedulerType } from './common/enums/scheduler';
 import { Events } from './common/enums/events';
 
 @Injectable()
 export class AppService implements OnModuleInit {
-  constructor(private publisherService: PublishersService) {
+  constructor(private contractEventsService: ContractEventsService) {
   }
 
   onModuleInit() {
-    // PublisherService is a class that is used to register cron jobs for emitting events
-    this.publisherService.registerPublisher(Events.CONTRACT_NEW_EVENT, SchedulerType.FIVE_SECONDS);
+    this.contractEventsService
+      .registerCronJob(Events.CONTRACT_DEPOSIT_EVENT, SchedulerType.ONE_MINUTE);
   }
 }
