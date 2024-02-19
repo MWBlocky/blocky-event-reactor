@@ -32,15 +32,12 @@ export class IntegrationsService {
   async getPendingTransactions() {
     const chainId = this.web3ConfigService.network.chainId;
     const safeAddress = this.web3ConfigService.network.safeAddress;
-    const safeApiKit = this.safeSdkService.getSafeApiKit(chainId);
-    const pendingTxs = this.safeSdkService.getPendingTransactions(safeApiKit, safeAddress);
-
-    return pendingTxs;
+    return await this.safeSdkService.getPendingTransactions(chainId, safeAddress);
   }
 
   async confirmTransaction(safeTxHash: any) {
     const chainId = this.web3ConfigService.network.chainId;
-    const safeApiKit = this.safeSdkService.getSafeApiKit(chainId);
+    const safeApiKit = this.safeSdkService.createSafeApiKit(chainId);
     const ethers = this.ethersService.ethers;
     const safeAddress = this.web3ConfigService.network.safeAddress;
     const url = this.web3ConfigService.network.rpcUrl;

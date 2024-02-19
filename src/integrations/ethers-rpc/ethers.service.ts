@@ -7,10 +7,10 @@ export class EthersService {
   get ethers() {
     return ethers;
   }
-  getProvider(rpcUrl: string): ethers.providers.Provider {
-    return new ethers.providers.StaticJsonRpcProvider(rpcUrl);
+  getProvider(rpcUrl: string) {
+    return ethers.getDefaultProvider(rpcUrl);
   }
-  getContract(abi: any, contractAddress: string, provider: ethers.providers.Provider): ethers.Contract {
+  getContract(abi: any, contractAddress: string, provider: any): ethers.Contract {
     return new ethers.Contract(contractAddress, abi.abi, provider);
   }
   getContractEvents(contract: ethers.Contract, eventName: string): Promise<any> {

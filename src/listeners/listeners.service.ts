@@ -15,7 +15,7 @@ export class ListenersService {
   ) {}
 
   @OnEvent(Events.CONTRACT_NEW_EVENT)
-  processContractNewEvent(eventName: string, payload: any) {
+  processDepositEvent(eventName: string, payload: any) {
     payload.forEach((event: any) => {
       if (this.contractLastCheckedBlock >= event.blockNumber) {
         return;

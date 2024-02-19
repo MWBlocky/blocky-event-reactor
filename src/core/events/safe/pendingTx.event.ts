@@ -9,6 +9,7 @@ export class PendingTxEvent extends AbstractEvent {
   }
 
   canBeEmitted(): boolean {
+    //sprawdzam ich status czy są pending i jeśli są to podpisuje
     return true;
   }
 }

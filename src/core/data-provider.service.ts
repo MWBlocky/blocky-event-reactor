@@ -11,9 +11,9 @@ export class DataProviderService {
   async getDataForEvent(eventName: string): Promise<any> {
     switch (eventName) {
       case Events.CONTRACT_NEW_EVENT:
-        return await this.integrationsService.getContractEvents("TestEvent");
+        return await this.integrationsService.getContractEvents("depositEvent");
       case Events.SAFE_SIGN_TRANSACTION:
-        return "mocked data for Safe.Transaction event";
+        return await this.integrationsService.getPendingTransactions();
       default:
         return null;
     }

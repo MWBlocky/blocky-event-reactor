@@ -9,6 +9,7 @@ export class DepositEvent extends AbstractEvent {
   }
 
   canBeEmitted(): boolean {
+    //trzeba przefiltrować, żeby zostały eventy nowsze niż ostatnio sprawdzone (dane z bazy)
     return true;
   }
 }
