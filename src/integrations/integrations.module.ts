@@ -3,7 +3,6 @@ import { IntegrationsService } from './integrations.service';
 import { Web3ConfigService } from '../common/config/web3-config.service';
 import { EthersService } from './ethers-rpc/ethers.service';
 import { SafeSdkService } from './safe-sdk/safe-sdk.service';
-
 @Module({
   providers: [
     IntegrationsService,

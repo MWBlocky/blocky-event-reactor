@@ -13,9 +13,10 @@ export class ContractsProcessorService {
   ) {
   }
 
-  async processSignedTransactionPropositionCreation(): Promise<void> {
+  async processSignedTransactionCreation(): Promise<void> {
     const {blockNumber, transactionIndex} = await this.storageUtil.readStorage();
     this.logger.log(`Last processed block: ${blockNumber}`);
+
     const events: DepositEvent[] = await this.integrationsService.getContractEvents(
       Events.CONTRACT_DEPOSIT_EVENT,
     );
@@ -33,9 +34,9 @@ export class ContractsProcessorService {
     const newTxs:string[] = [];
     for (const event of events) {
       try {
-        const data = event.args[0];
-        const value = event.args[1];
-        const to = event.args[2];
+        const data = event.args[0].toString();
+        const value = event.args[1].toString();
+        const to = event.args[2].toString();
         const transaction = await this.integrationsService.createTransaction({data, value, to});
         newTxs.push(transaction.safeTxHash);
         await this.storageUtil.saveStorage({

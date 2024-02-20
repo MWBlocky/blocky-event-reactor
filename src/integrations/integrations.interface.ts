@@ -4,9 +4,3 @@ export interface TransactionData {
   data: string;
   nonce?: number;
 }
-
-export interface Event {
-  blockNumber: number;
-  transactionIndex: number;
-  args: string[];
-}

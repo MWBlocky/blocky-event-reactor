@@ -34,7 +34,7 @@ export class EnvironmentConfigService {
 export const envValidator = Joi.object({
     PORT: Joi.string().default(3000),
     BOT_PRIVATE_KEY: Joi.string().default(''),
-    RPC_URL: Joi.string().default('http://localhost:8545'),
+    RPC_URL: Joi.string().default(''),
     CHAIN_ID: Joi.string().default(1),
     CONTRACT_ADDRESS: Joi.string().default(''),
     CONTRACT_ABI_ROOT: Joi.any().default(''),

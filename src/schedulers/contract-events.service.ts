@@ -36,7 +36,7 @@ export class ContractEventsService {
     this.logger.debug('Contract events scheduler called');
     try {
       this.cronJobStatus.status = CronJobStatus.RUNNING;
-      await this.processorService.processSignedTransactionPropositionCreation();
+      await this.processorService.processSignedTransactionCreation();
     } catch (error) {
       this.logger.error(`Error: ${error.message}`);
     } finally {

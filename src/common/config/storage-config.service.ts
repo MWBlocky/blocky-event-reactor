@@ -7,7 +7,6 @@ export class StorageConfigService {
     private environmentConfigService: EnvironmentConfigService
   ) {
   }
-
   get storage(): Storage {
     const storageJsonFile = this.environmentConfigService.storageJsonFile;
     return {
