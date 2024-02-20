@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Injectable, Logger } from '@nestjs/common';
 import { StorageConfigService } from '../common/config/storage-config.service';
-import { StorageData } from './storage.interface';
+import { StorageData } from '../common/interfaces/storage';
 
 @Injectable()
 export class StorageService {

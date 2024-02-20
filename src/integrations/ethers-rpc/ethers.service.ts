@@ -1,27 +1,32 @@
 import { ethers, EventLog, Log } from 'ethers';
 import { Injectable } from '@nestjs/common';
 import { EIP712_SAFE_TX_TYPE } from '../../common/utils/misc.util';
-
+import { SafeTransaction } from '../../common/interfaces/safe';
 @Injectable()
 export class EthersService {
   constructor() {
   }
+
   get ethers() {
     return ethers;
   }
+
   getProvider(rpcUrl: string) {
     return ethers.getDefaultProvider(rpcUrl);
   }
+
   getContract(
     abi: { abi: ethers.Interface | ethers.InterfaceAbi; },
     contractAddress: string | ethers.Addressable,
     provider: ethers.AbstractProvider | ethers.ContractRunner): ethers.Contract {
     return new ethers.Contract(contractAddress, abi.abi, provider);
   }
+
   getContractEvents(contract: ethers.Contract, eventName: string): Promise<(EventLog | Log)[]> {
     return contract.queryFilter(contract.filters[eventName]());
   }
-  hashSafeTx(chainId: bigint, safeAddress: string, tx): string {
+
+  hashSafeTx(chainId: bigint, safeAddress: string, tx: SafeTransaction): string {
     return ethers.TypedDataEncoder.hash({
         chainId: chainId,
         verifyingContract: safeAddress,

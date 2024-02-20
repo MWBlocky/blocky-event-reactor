@@ -1,0 +1,1 @@
+export { SafeTransaction } from '@safe-global/safe-core-sdk-types';

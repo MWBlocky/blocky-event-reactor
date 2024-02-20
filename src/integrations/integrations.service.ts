@@ -4,8 +4,8 @@ import fs from 'fs';
 import { Web3ConfigService } from '../common/config/web3-config.service';
 import { EthersService } from './ethers-rpc/ethers.service';
 import { SafeSdkService } from './safe-sdk/safe-sdk.service';
-import { DepositEvent } from '../core/contracts-processor.interface';
-import { TransactionData } from './integrations.interface';
+import { DepositEvent } from '../common/interfaces/events';
+import { TransactionData } from '../common/interfaces/transactions';
 
 @Injectable()
 export class IntegrationsService {

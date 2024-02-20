@@ -2,17 +2,20 @@ import SafeApiKit from '@safe-global/api-kit';
 import Safe, { DeploySafeProps, EthersAdapter, SafeAccountConfig } from '@safe-global/protocol-kit';
 import { SafeFactory } from '@safe-global/protocol-kit';
 import { toHexString } from '../../common/utils/misc.util';
-import { TransactionData } from '../integrations.interface';
+import { TransactionData } from '../../common/interfaces/transactions';
+import { Wallet } from '../../common/interfaces/ethers';
 
 export class SafeSdkService {
   constructor() {
   }
+
   async createSafeApiKit(chainId: bigint) {
     return new SafeApiKit({ chainId });
   }
+
   async createProtocolKit(
-    ethers: typeof import("ethers/lib.commonjs/ethers"),
-    owner1Signer): Promise<Safe> {
+    ethers: typeof import('ethers/lib.commonjs/ethers'),
+    owner1Signer: Wallet): Promise<Safe> {
     const ethAdapterOwner1 = new EthersAdapter({
       ethers,
       signerOrProvider: owner1Signer,

@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Events } from '../common/enums/events';
 import { IntegrationsService } from '../integrations/integrations.service';
 import { StorageService } from '../storage/storage.service';
-import { DepositEvent } from './contracts-processor.interface';
+import { DepositEvent } from '../common/interfaces/events';
 
 @Injectable()
 export class ContractsProcessorService {

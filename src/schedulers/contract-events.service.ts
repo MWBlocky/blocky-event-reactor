@@ -23,12 +23,12 @@ export class ContractEventsService {
     this.schedulerUtils.addCronJob(
       eventName,
       schedulerType,
-      () => this.handleCron(eventName),
+      () => this.handleCron(),
       this.schedulerRegistry,
     );
   }
 
-  async handleCron(eventName: string) {
+  async handleCron() {
     if (this.cronJobStatus.status === CronJobStatus.RUNNING) {
       this.logger.debug('Contract events scheduler is already running');
       return;
